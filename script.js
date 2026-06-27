@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. HERO TYPING EFFECT
     // ==========================================
     const typedTextElement = document.getElementById('typed-element');
-    const roles = ['Web Developer', 'Web Designer', 'Web Specialist', 'PixelForge Founder'];
+    const roles = ['Web Developer', 'Web Designer', 'Web Specialist', 'AuraGrid Founder'];
     let roleIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
@@ -249,27 +249,27 @@ document.addEventListener('DOMContentLoaded', () => {
         2: {
             title: "Interactive Markup Editor",
             tag: "Development",
-            tech: ["HTML5", "CSS3", "JavaScript", "Monaco Editor"],
-            desc: "A browser-based live compiling sandbox for web markup and stylesheet rules. Provides real-time syntax checking, interactive code suggestion dropdowns, side-by-side split screen viewports, and local storage state persistence. Ideal for testing web interface snippets on the fly.",
-            link: "#",
+            tech: ["HTML5", "CSS3", "JavaScript", "Sandbox Compilation"],
+            desc: "A browser-based live compiling sandbox for web markup and stylesheet rules. Provides real-time syntax checking, live iframe split-screen preview, pre-loaded layout templates, tab indentation helpers, and copy code features. Fully responsive and self-contained.",
+            link: "editor.html",
             gradientClass: "bg-gradient-code",
             iconClass: "fa-code"
         },
         3: {
             title: "Premium Glassmorphic Admin",
-            tag: "UI/UX Design",
-            tech: ["Figma", "UI/UX", "Glassmorphism", "Prototyping"],
-            desc: "A visual masterclass designing control panels for server operations. It implements rich glassmorphism tokens, harmony palettes using HSL colors, responsive grid structures, dark/light variations, and micro-interaction animations. Focused on layout scalability and clean data presentation metrics.",
-            link: "#",
+            tag: "Development & UI/UX",
+            tech: ["HTML5", "CSS3", "JavaScript", "Glassmorphism"],
+            desc: "A beautiful admin dashboard demonstrating glassmorphism tokens, harmony palettes using HSL colors, responsive sidebar menus, animating SVG charts, fluctuating CPU/memory parameters, and a retro console log feed updated dynamically.",
+            link: "dashboard.html",
             gradientClass: "bg-gradient-dashboard",
             iconClass: "fa-chart-line"
         },
         4: {
             title: "SEO & Web Performance Toolkit",
             tag: "Development & Optimization",
-            tech: ["JavaScript", "Web Auditing", "SEO Tools", "Core Web Vitals"],
-            desc: "An optimization bundle built to analyze loading paths, script execution threads, image compression rates, and semantic structure tags. Ideal for auditing portfolio pages, discovering bottlenecks, rendering benchmarks, and fixing Google Lighthouse ratings.",
-            link: "#",
+            tech: ["HTML5", "CSS3", "JavaScript", "Lighthouse Audit"],
+            desc: "An optimization suite designed to test site performance, accessibility, SEO structures, and best practices. Provides an interactive analyzer with Lighthouse-style animating progress dials, critical fix suggestions, and check audit details.",
+            link: "seo-suite.html",
             gradientClass: "bg-gradient-speed",
             iconClass: "fa-gauge-high"
         }
@@ -335,61 +335,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ==========================================
-    // 9. CONTACT FORM VALIDATION & HANDLING
-    // ==========================================
-    const contactForm = document.getElementById('contact-form');
-    const formSubmitBtn = document.getElementById('form-submit-btn');
-    const formFeedback = document.getElementById('form-feedback');
 
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const nameVal = document.getElementById('name').value.trim();
-        const emailVal = document.getElementById('email').value.trim();
-        const subjectVal = document.getElementById('subject').value.trim();
-        const messageVal = document.getElementById('message').value.trim();
-
-        // Basic validations
-        if (!nameVal || !emailVal || !subjectVal || !messageVal) {
-            showFeedback('Please fill out all fields.', 'error');
-            return;
-        }
-
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailVal)) {
-            showFeedback('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        // Show Loading State
-        formSubmitBtn.disabled = true;
-        const originalBtnContent = formSubmitBtn.innerHTML;
-        formSubmitBtn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
-        formFeedback.textContent = '';
-
-        // Simulate network request (1.5 seconds)
-        setTimeout(() => {
-            // Restore button
-            formSubmitBtn.disabled = false;
-            formSubmitBtn.innerHTML = originalBtnContent;
-
-            // Success feedback
-            showFeedback('Thank you, Kavissh will get back to you shortly!', 'success');
-            contactForm.reset();
-
-            // Clear success message after 5 seconds
-            setTimeout(() => {
-                formFeedback.textContent = '';
-                formFeedback.className = 'form-feedback';
-            }, 5000);
-
-        }, 1500);
-    });
-
-    const showFeedback = (msg, type) => {
-        formFeedback.textContent = msg;
-        formFeedback.className = `form-feedback ${type}`;
-    };
 });
