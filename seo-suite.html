@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed & SEO Suite | AuraGrid Digital</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #0a0b10;
+            --bg-surface: #11121d;
+            --glass-bg: rgba(25, 27, 45, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            
+            --primary-color: #6366f1;
+            --secondary-color: #14b8a6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.05);
+
+            --color-green: #10b981;
+            --color-yellow: #f59e0b;
+            --color-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 20% 90%, rgba(20, 184, 166, 0.12) 0%, transparent 40%);
+        }
+
+        /* Glass Utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 16px;
+        }
+
+        /* Header Style */
+        header {
+            height: 70px;
+            background-color: rgba(17, 18, 29, 0.85);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title span {
+            color: var(--secondary-color);
+        }
+
+        /* Container Main */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Search input bar block */
+        .search-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .search-card h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .search-bar-form {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .search-input {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .search-btn:hover {
+            opacity: 0.95;
+        }
+
+        /* Loading / Analyzing Screen */
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-status {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            height: 24px;
+        }
+
+        /* Results Screen */
+        .results-container {
+            display: none;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Score Gauges Row */
+        .scores-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .scores-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .score-card {
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gauge-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 8;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: var(--color-green);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transform: rotate(-90deg);
+            transform-origin: 50px 50px;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .circle-progress.green { stroke: var(--color-green); }
+        .circle-progress.yellow { stroke: var(--color-yellow); }
+        .circle-progress.red { stroke: var(--color-red); }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .score-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Detailed audits grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .details-card {
+            padding: 30px;
+        }
+
+        .details-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 12px;
+        }
+
+        /* Passed lists & warning lists */
+        .audit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .audit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .audit-item.passed i {
+            color: var(--color-green);
+        }
+
+        .audit-item.failed i {
+            color: var(--color-yellow);
+        }
+
+        .audit-icon {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .audit-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .audit-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="index.html#portfolio" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <h1 class="title"><i class="fa-solid fa-gauge-high"></i> Speed & <span>SEO Suite</span></h1>
+        </div>
+    </header>
+
+    <main>
+        <!-- Search Card -->
+        <div class="search-card glass">
+            <h2>Website Performance Audit</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">Input a website URL to measure load speed, SEO structure, and best practices benchmarks.</p>
+            <form class="search-bar-form" id="audit-form">
+                <input type="text" class="search-input" id="url-input" placeholder="https://example.com" required>
+                <button type="submit" class="search-btn" id="submit-btn"><i class="fa-solid fa-bolt"></i> Run Audit</button>
+            </form>
+        </div>
+
+        <!-- Loading indicator -->
+        <div class="loading-container glass" id="loading-container">
+            <div class="loader-ring"></div>
+            <h3>Analyzing Web Domain</h3>
+            <div class="loader-status" id="loader-status">Starting secure SSL audit...</div>
+        </div>
+
+        <!-- Audit Results -->
+        <div class="results-container" id="results-container">
+            <!-- Scores Gauges Row -->
+            <div class="scores-row">
+                <div class="score-card glass">
+                    <div class="gauge-wrapper">
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="40"/>
+                            <circle class="circle-progress" id="score-perf-circle" cx="50" cy="50" r="40"/>
+                        </svg>
+                        <div class="score-text" id="score-perf">0</div>
+                    </div>
+                    <span class="score-title">Performance</span>
+                </div>
+                
+                <div class="score-card glass">
+                    <div class="gauge-wrapper">
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="40"/>
+                            <circle class="circle-progress" id="score-access-circle" cx="50" cy="50" r="40"/>
+                        </svg>
+                        <div class="score-text" id="score-access">0</div>
+                    </div>
+                    <span class="score-title">Accessibility</span>
+                </div>
+
+                <div class="score-card glass">
+                    <div class="gauge-wrapper">
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="40"/>
+                            <circle class="circle-progress" id="score-best-circle" cx="50" cy="50" r="40"/>
+                        </svg>
+                        <div class="score-text" id="score-best">0</div>
+                    </div>
+                    <span class="score-title">Best Practices</span>
+                </div>
+
+                <div class="score-card glass">
+                    <div class="gauge-wrapper">
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="40"/>
+                            <circle class="circle-progress" id="score-seo-circle" cx="50" cy="50" r="40"/>
+                        </svg>
+                        <div class="score-text" id="score-seo">0</div>
+                    </div>
+                    <span class="score-title">SEO</span>
+                </div>
+            </div>
+
+            <!-- Details audit cards grid -->
+            <div class="details-grid">
+                <!-- Optimization opportunities -->
+                <div class="details-card glass">
+                    <h3>Critical Fixes</h3>
+                    <div class="audit-list">
+                        <div class="audit-item failed">
+                            <i class="fa-solid fa-circle-exclamation audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Reduce Unused CSS</h4>
+                                <p>Unused stylesheets are delaying the initial page paint. Reduce size by 140KB.</p>
+                            </div>
+                        </div>
+                        <div class="audit-item failed">
+                            <i class="fa-solid fa-circle-exclamation audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Defer Offscreen Images</h4>
+                                <p>Implement lazy loading for images down the page. Saves 320ms on initial load.</p>
+                            </div>
+                        </div>
+                        <div class="audit-item failed">
+                            <i class="fa-solid fa-circle-exclamation audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Leverage Modern Format Images</h4>
+                                <p>Convert JPEG/PNG images to WebP to reduce resource payloads by up to 60%.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passed Audits list -->
+                <div class="details-card glass">
+                    <h3>Successful Audits</h3>
+                    <div class="audit-list">
+                        <div class="audit-item passed">
+                            <i class="fa-solid fa-circle-check audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Page Responsiveness Verified</h4>
+                                <p>Visual grid viewport configured correctly. Fits mobile, tablet, and desktop screens.</p>
+                            </div>
+                        </div>
+                        <div class="audit-item passed">
+                            <i class="fa-solid fa-circle-check audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Semantic Header Tags Found</h4>
+                                <p>Page utilizes a single standard h1 header tag with proper hierarchy flow.</p>
+                            </div>
+                        </div>
+                        <div class="audit-item passed">
+                            <i class="fa-solid fa-circle-check audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Alt Text Configuration OK</h4>
+                                <p>All active img markup structures contain valid alt descriptions for screen readers.</p>
+                            </div>
+                        </div>
+                        <div class="audit-item passed">
+                            <i class="fa-solid fa-circle-check audit-icon"></i>
+                            <div class="audit-info">
+                                <h4>Structured JSON-LD Schema Present</h4>
+                                <p>Valid search-crawler schema tags found within index html head wrapper.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const form = document.getElementById('audit-form');
+        const loadingContainer = document.getElementById('loading-container');
+        const resultsContainer = document.getElementById('results-container');
+        const loaderStatus = document.getElementById('loader-status');
+
+        const statusLogs = [
+            "Starting secure SSL audit...",
+            "Evaluating core web vitals...",
+            "Checking mobile responsive viewport...",
+            "Auditing meta description tags...",
+            "Measuring network compression rates...",
+            "Generating Lighthouse scoring indicators..."
+        ];
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Hide previous results and show loading spinner
+            resultsContainer.style.display = 'none';
+            loadingContainer.style.display = 'flex';
+
+            // Cycle status logs
+            let logIndex = 0;
+            loaderStatus.textContent = statusLogs[0];
+            const interval = setInterval(() => {
+                logIndex++;
+                if (logIndex < statusLogs.length) {
+                    loaderStatus.textContent = statusLogs[logIndex];
+                }
+            }, 700);
+
+            // Simulate audit calculation timeout (4.5 seconds)
+            setTimeout(() => {
+                clearInterval(interval);
+                loadingContainer.style.display = 'none';
+                resultsContainer.style.display = 'flex';
+
+                // Randomize mock scores for high interactivity
+                const scores = {
+                    perf: Math.floor(82 + Math.random() * 16), // 82 to 98
+                    access: Math.floor(90 + Math.random() * 10), // 90 to 100
+                    best: Math.floor(85 + Math.random() * 14), // 85 to 99
+                    seo: Math.floor(92 + Math.random() * 9) // 92 to 100
+                };
+
+                // Trigger animate scores
+                animateGauge('perf', scores.perf);
+                animateGauge('access', scores.access);
+                animateGauge('best', scores.best);
+                animateGauge('seo', scores.seo);
+
+            }, 4500);
+        });
+
+        // Circle circumference is 2 * PI * r = 2 * 3.14159 * 40 = 251.2
+        const circleCircumference = 251.2;
+
+        const animateGauge = (gaugeId, targetScore) => {
+            const scoreValElement = document.getElementById(`score-${gaugeId}`);
+            const progressCircle = document.getElementById(`score-${gaugeId}-circle`);
+            
+            // Set circle color based on score
+            progressCircle.className = 'circle-progress'; // reset
+            if (targetScore >= 90) {
+                progressCircle.classList.add('green');
+            } else if (targetScore >= 50) {
+                progressCircle.classList.add('yellow');
+            } else {
+                progressCircle.classList.add('red');
+            }
+
+            // Animate number count up
+            let currentVal = 0;
+            const stepTime = Math.abs(Math.floor(1000 / targetScore));
+            
+            const timer = setInterval(() => {
+                currentVal++;
+                scoreValElement.textContent = currentVal;
+                
+                // Animate progress circle stroke offset
+                const offset = circleCircumference - (currentVal / 100) * circleCircumference;
+                progressCircle.style.strokeDashoffset = offset;
+
+                if (currentVal === targetScore) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        };
+    </script>
+</body>
+</html>
