@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorphic Admin UI | AuraGrid Digital</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            /* Glassmorphism theme setup */
+            --hue-primary: 250;
+            --hue-secondary: 170;
+            
+            --bg-base: #0a0b10;
+            --bg-surface: #11121d;
+            --glass-bg: rgba(25, 27, 45, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            
+            --primary-color: hsl(var(--hue-primary), 85%, 60%);
+            --secondary-color: hsl(var(--hue-secondary), 85%, 50%);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 40%);
+        }
+
+        /* Glass Utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 16px;
+        }
+
+        /* Sidebar navigation */
+        aside {
+            width: 250px;
+            background-color: rgba(10, 11, 16, 0.8);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        @media (max-width: 900px) {
+            aside {
+                display: none; /* Hide sidebar on mobile/tablet */
+            }
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .menu-item.active a, .menu-item a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 4px 0 0 var(--secondary-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            border-color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Main Workspace Content */
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Header top section */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .time-box {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: rgba(20, 184, 166, 0.08);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(20, 184, 166, 0.15);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        /* Stats Grid Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 18px;
+            color: var(--secondary-color);
+        }
+
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .stat-trend {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trend-up { color: #10b981; }
+        .trend-down { color: #ef4444; }
+
+        /* Dashboard Charts Section */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1.6fr 0.9fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1100px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .chart-body {
+            height: 200px;
+            position: relative;
+            width: 100%;
+        }
+
+        /* SVG Line Graph animation */
+        .svg-chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .sparkline {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-in-out forwards;
+        }
+
+        .sparkline-glow {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 8;
+            stroke-linecap: round;
+            opacity: 0.15;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-in-out forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .chart-grid-line {
+            stroke: var(--border-color);
+            stroke-width: 1;
+            stroke-dasharray: 4;
+        }
+
+        /* Console log shell */
+        .console-card {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .console-shell {
+            flex: 1;
+            background-color: #05060b;
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #10b981;
+            min-height: 200px;
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .log-line {
+            margin-bottom: 6px;
+            animation: fadeIn 0.3s forwards;
+            word-break: break-all;
+        }
+
+        .log-time {
+            color: var(--secondary-color);
+        }
+
+        .log-info {
+            color: #6366f1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Panel -->
+    <aside>
+        <div class="logo">
+            <i class="fa-solid fa-chart-line" style="color: var(--secondary-color);"></i>
+            AuraGrid<span>.OS</span>
+        </div>
+        <ul class="menu-list">
+            <li class="menu-item active"><a href="#"><i class="fa-solid fa-cubes"></i> Dashboard</a></li>
+            <li class="menu-item"><a href="#"><i class="fa-solid fa-server"></i> Server Nodes</a></li>
+            <li class="menu-item"><a href="#"><i class="fa-solid fa-database"></i> Database</a></li>
+            <li class="menu-item"><a href="#"><i class="fa-solid fa-sliders"></i> System Settings</a></li>
+        </ul>
+        <a href="index.html#portfolio" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Exit Panel</a>
+    </aside>
+
+    <!-- Workspace -->
+    <main>
+        <header>
+            <div>
+                <h1>System Overview</h1>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">Node cluster metrics are currently healthy</p>
+            </div>
+            <div class="header-controls">
+                <div class="time-box" id="time-box">00:00:00 AM</div>
+                <div class="user-profile">
+                    <span style="font-weight: 600; font-size: 14px;">Kavissh (Admin)</span>
+                    <div class="user-avatar">K</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats row cards -->
+        <div class="stats-grid">
+            <div class="stat-card glass">
+                <div class="stat-header">
+                    <span>CPU LOAD</span>
+                    <i class="fa-solid fa-microchip stat-icon"></i>
+                </div>
+                <div class="stat-val" id="cpu-val">34.2%</div>
+                <div class="stat-trend trend-up">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+1.2% since login</span>
+                </div>
+            </div>
+            <div class="stat-card glass">
+                <div class="stat-header">
+                    <span>MEMORY UTILITY</span>
+                    <i class="fa-solid fa-memory stat-icon" style="color: var(--primary-color);"></i>
+                </div>
+                <div class="stat-val" id="mem-val">4.8 GB</div>
+                <div class="stat-trend trend-down">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                    <span>-240MB cached clear</span>
+                </div>
+            </div>
+            <div class="stat-card glass">
+                <div class="stat-header">
+                    <span>ACTIVE SESSIONS</span>
+                    <i class="fa-solid fa-users stat-icon" style="color: #eab308;"></i>
+                </div>
+                <div class="stat-val">1,248</div>
+                <div class="stat-trend trend-up">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+12.4% last hour</span>
+                </div>
+            </div>
+            <div class="stat-card glass">
+                <div class="stat-header">
+                    <span>REQUEST RATE</span>
+                    <i class="fa-solid fa-network-wired stat-icon" style="color: #ec4899;"></i>
+                </div>
+                <div class="stat-val" id="rate-val">245 r/s</div>
+                <div class="stat-trend trend-up">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>System loads normal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="charts-row">
+            <!-- Graph card -->
+            <div class="chart-card glass">
+                <div class="chart-title">Network Throughput (24h)</div>
+                <div class="chart-body">
+                    <svg class="svg-chart" viewBox="0 0 500 200" preserveAspectRatio="none">
+                        <!-- Horizontal Grid Lines -->
+                        <line class="chart-grid-line" x1="0" y1="50" x2="500" y2="50" />
+                        <line class="chart-grid-line" x1="0" y1="100" x2="500" y2="100" />
+                        <line class="chart-grid-line" x1="0" y1="150" x2="500" y2="150" />
+                        
+                        <!-- Glow Path -->
+                        <path class="sparkline-glow" d="M 0,160 Q 50,110 100,140 T 200,80 T 300,120 T 400,60 T 500,90" />
+                        <!-- Main Path -->
+                        <path class="sparkline" d="M 0,160 Q 50,110 100,140 T 200,80 T 300,120 T 400,60 T 500,90" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Console Card -->
+            <div class="console-card glass">
+                <div class="chart-title"><i class="fa-solid fa-terminal" style="margin-right: 8px;"></i>System Cluster Logs</div>
+                <div class="console-shell" id="console-shell">
+                    <div class="log-line"><span class="log-time">[11:46:01]</span> <span class="log-info">SYSTEM:</span> AuraGrid.OS Node cluster initialized successfully.</div>
+                    <div class="log-line"><span class="log-time">[11:46:02]</span> <span class="log-info">NET:</span> Port 443 listening, firewall config OK.</div>
+                    <div class="log-line"><span class="log-time">[11:46:05]</span> <span class="log-info">DB:</span> PostgreSQL connection pool verified.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // System Clock
+        const updateTime = () => {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            document.getElementById('time-box').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        };
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Fluctuating values logic
+        setInterval(() => {
+            // CPU fluctuation
+            const cpu = (20 + Math.random() * 40).toFixed(1);
+            document.getElementById('cpu-val').textContent = `${cpu}%`;
+
+            // Memory fluctuation
+            const mem = (4.5 + Math.random() * 0.6).toFixed(2);
+            document.getElementById('mem-val').textContent = `${mem} GB`;
+
+            // Request rate fluctuation
+            const rate = Math.floor(180 + Math.random() * 120);
+            document.getElementById('rate-val').textContent = `${rate} r/s`;
+        }, 3000);
+
+        // Simulated logging console feed
+        const logContent = [
+            "GET /api/v1/metrics 200 OK - 8ms",
+            "POST /api/v1/auth/session - Token generated successfully",
+            "SYSTEM: Cache sync done, cleared 14.2MB buffer memory",
+            "WARN: High connections rate on Node-3, balancing cluster load",
+            "GET /assets/hero-bg.png 304 Not Modified - 2ms",
+            "SYSTEM: CPU temp stabilized at 41°C",
+            "DB: Database backup process scheduled at midnight OK",
+            "NET: WebSocket handshake verified on client session #4509"
+        ];
+
+        const logTypes = ["GET", "POST", "SYSTEM", "WARN", "GET", "SYSTEM", "DB", "NET"];
+
+        const shell = document.getElementById('console-shell');
+        
+        const appendLog = () => {
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            const randIdx = Math.floor(Math.random() * logContent.length);
+            const content = logContent[randIdx];
+            const type = logTypes[randIdx];
+
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.innerHTML = `<span class="log-time">[${timeString}]</span> <span class="log-info">${type}:</span> ${content}`;
+            
+            shell.appendChild(line);
+            shell.scrollTop = shell.scrollHeight;
+
+            // Keep log entries list under 25 elements to avoid lag
+            if (shell.children.length > 25) {
+                shell.removeChild(shell.firstChild);
+            }
+        };
+
+        setInterval(appendLog, 3000);
+    </script>
+</body>
+</html>
