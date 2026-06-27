@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Markup Editor | AuraGrid Digital</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #0f1015;
+            --bg-card: #161822;
+            --primary-color: #6366f1;
+            --secondary-color: #14b8a6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #242936;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Style */
+        header {
+            height: 70px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title span {
+            color: var(--secondary-color);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        select {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Workspace Grid */
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: calc(100vh - 70px);
+        }
+
+        @media (max-width: 768px) {
+            .workspace {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+
+        /* Editor Block */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            background-color: #12131a;
+            position: relative;
+        }
+
+        .panel-header {
+            height: 40px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            gap: 8px;
+        }
+
+        .panel-header i {
+            color: var(--primary-color);
+        }
+
+        .editor-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+        }
+
+        /* Line numbers */
+        .line-numbers {
+            width: 45px;
+            background-color: #12131a;
+            border-right: 1px solid var(--border-color);
+            padding: 16px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4b5563;
+            text-align: right;
+            padding-right: 12px;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        textarea {
+            flex: 1;
+            background-color: transparent;
+            color: #e5e7eb;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 20px;
+            padding: 16px;
+            resize: none;
+            border: none;
+            outline: none;
+            overflow-y: auto;
+            tab-size: 4;
+        }
+
+        /* Preview Block */
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        .preview-header {
+            height: 40px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            gap: 8px;
+        }
+
+        .preview-header i {
+            color: var(--secondary-color);
+        }
+
+        iframe {
+            flex: 1;
+            border: none;
+            background-color: #ffffff;
+            width: 100%;
+            height: 100%;
+        }
+
+        .copy-toast {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+            z-index: 100;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="index.html#portfolio" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <h1 class="title"><i class="fa-solid fa-code"></i> Live <span>Markup Editor</span></h1>
+        </div>
+        <div class="header-right">
+            <select id="template-select">
+                <option value="card">Glassmorphic Card</option>
+                <option value="button">Glowing Button</option>
+                <option value="text">Interactive Quote</option>
+            </select>
+            <button class="btn" id="copy-btn"><i class="fa-solid fa-copy"></i> Copy Code</button>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <!-- Editor side -->
+        <div class="editor-container">
+            <div class="panel-header"><i class="fa-solid fa-terminal"></i> HTML / CSS Source</div>
+            <div class="editor-wrapper">
+                <div class="line-numbers" id="line-numbers"></div>
+                <textarea id="code-textarea" spellcheck="false" autocomplete="off"></textarea>
+            </div>
+            <div class="copy-toast" id="toast">Code copied to clipboard!</div>
+        </div>
+
+        <!-- Preview side -->
+        <div class="preview-container">
+            <div class="preview-header"><i class="fa-solid fa-eye"></i> Live Sandbox View</div>
+            <iframe id="preview-iframe"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('code-textarea');
+        const iframe = document.getElementById('preview-iframe');
+        const lineNumbers = document.getElementById('line-numbers');
+        const templateSelect = document.getElementById('template-select');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+
+        // Preloaded templates
+        const templates = {
+            card: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #f8fafc;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 340px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #14b8a6);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1, #14b8a6);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="avatar">✨</div>
+        <h2>AuraGrid Studio</h2>
+        <p>A beautiful design system utilizing frosted glass, harmonious colors, and clean code.</p>
+        <button class="btn">Explore Work</button>
+    </div>
+</body>
+</html>`,
+            button: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: #0b0f19;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: system-ui, sans-serif;
+        }
+
+        .glow-btn {
+            position: relative;
+            background: #111;
+            color: #14b8a6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 16px 36px;
+            border: 2px solid #14b8a6;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(20, 184, 166, 0.2);
+        }
+
+        .glow-btn:hover {
+            color: #fff;
+            background: #14b8a6;
+            box-shadow: 0 0 30px rgba(20, 184, 166, 0.6);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <button class="glow-btn">Initialize System</button>
+</body>
+</html>`,
+            text: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #111528, #070913);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Georgia', serif;
+            color: #f1f5f9;
+        }
+
+        .quote-box {
+            max-width: 500px;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        .quote-text {
+            font-size: 24px;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            color: #e2e8f0;
+        }
+
+        .quote-author {
+            font-family: 'sans-serif';
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #14b8a6;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-box">
+        <p class="quote-text">"Simplicity is the ultimate sophistication. When you write clean structures, design follows naturally."</p>
+        <p class="quote-author">— Web Architecture Guild</p>
+    </div>
+</body>
+</html>`
+        };
+
+        // Render editor output
+        const updatePreview = () => {
+            const code = textarea.value;
+            const documentTarget = iframe.contentDocument || iframe.contentWindow.document;
+            documentTarget.open();
+            documentTarget.write(code);
+            documentTarget.close();
+        };
+
+        // Line number renderer
+        const updateLineNumbers = () => {
+            const lines = textarea.value.split('\n');
+            const numLines = lines.length;
+            let numberHtml = '';
+            for (let i = 1; i <= numLines; i++) {
+                numberHtml += `<div>${i}</div>`;
+            }
+            lineNumbers.innerHTML = numberHtml;
+        };
+
+        textarea.addEventListener('input', () => {
+            updatePreview();
+            updateLineNumbers();
+        });
+
+        // Tab indentation helper
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+
+                // set textarea value to: text before caret + tab + text after caret
+                textarea.value = textarea.value.substring(0, start) + "    " + textarea.value.substring(end);
+
+                // put caret at right position
+                textarea.selectionStart = textarea.selectionEnd = start + 4;
+                updatePreview();
+            }
+        });
+
+        // Load templates
+        const loadTemplate = (name) => {
+            textarea.value = templates[name];
+            updatePreview();
+            updateLineNumbers();
+        };
+
+        templateSelect.addEventListener('change', (e) => {
+            loadTemplate(e.target.value);
+        });
+
+        // Copy button action
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            });
+        });
+
+        // Initial setup
+        loadTemplate('card');
+
+        // Sync scrolling of textarea and line numbers
+        textarea.addEventListener('scroll', () => {
+            lineNumbers.scrollTop = textarea.scrollTop;
+        });
+    </script>
+</body>
+</html>
